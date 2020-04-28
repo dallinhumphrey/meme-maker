@@ -9,6 +9,7 @@ import "./style/main.scss";
 const routes = {
   "/": () => <App />,
   "/form": () => <MemeForm />,
+  "/form/:id": ({ id }) => <MemeForm id={id} editMode={true} />,
 };
 
 function Main() {
