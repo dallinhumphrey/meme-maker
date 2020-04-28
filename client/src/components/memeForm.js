@@ -28,6 +28,26 @@ export default function MemeForm(props) {
     };
   };
 
+  const handleDrop = () => {
+    return {
+      addedfile: (file) => {
+        let upload = request
+          .post("https://api.cloudinary.com/v1_1/dhmonster/image/upload")
+          .field("upload_preset", "meme-images")
+          .field("file", file);
+
+        upload.end((err, res) => {
+          if (err) {
+            console.log("Cloudinary error: ", err);
+          }
+          if (res.body.secure_url !== "") {
+            setImage(res.body.secure_url);
+          }
+        });
+      },
+    };
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log(e);
@@ -41,10 +61,26 @@ export default function MemeForm(props) {
           ref={imageRef}
           config={componenetConfig()}
           djsConfig={djsConfig()}
-          // eventHandlers={handleDrop()}
+          eventHandlers={handleDrop()}
         >
           Meme goes here
         </DropzoneComponent>
+
+        <input
+          type="text"
+          placeholder="Enter a Caption"
+          value={caption}
+          onChange={(e) => setCaption(e.target.value)}
+        />
+        <div>
+          <input
+            type="checkbox"
+            checked={favorite}
+            onChange={() => setFavorite(!favorite)}
+          />
+          <span>Favorite?</span>
+        </div>
+        <button type="submit">Post / Edit Meme</button>
       </form>
     </div>
   );
